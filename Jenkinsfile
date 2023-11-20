@@ -2,11 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'dev', credentialsId: 'jenkins-git-ssh', url: 'https://github.com/dgorduz/devops_task/tree/dev'
-            }
-        }
         stage('Terraform init') {
             steps {
                 sh 'ls'
@@ -14,7 +9,7 @@ pipeline {
                 sh 'terraform init'
             }
         }
-        stage('Terraform apply') {
+        stage('Terraform plan') {
             steps {
                 sh 'terraform plan'
             }
