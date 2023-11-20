@@ -1,0 +1,51 @@
+1. add secret variable file for deployment
+packer build \
+  -var-file="secret.pkrvars.hcl" \
+  -var-file="production.pkrvars.hcl"
+
+------------
+
+# Create a new local user account for running Jenkins
+$userName = 'jenkins'
+$userPassword = 'P@ssw0rd' | ConvertTo-SecureString -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential ($userName, $userPassword)
+New-LocalUser -Name $userName -Password $userPassword
+
+# Download the latest Jenkins WAR file
+$jenkinsUrl = 'http://updates.jenkins-ci.org/latest/jenkins.war'
+$jenkinsPath = 'C:\Program Files (x86)\Jenkins\jenkins.war'
+Invoke-WebRequest -Uri $jenkinsUrl -OutFile $jenkinsPath
+
+# Create a new Jenkins service that runs under the jenkins user account
+$serviceName = 'Jenkins'
+$binaryPath = "C:\Windows\System32\java.exe -jar $jenkinsPath --httpPort=8080"
+$serviceParams = @{
+    Name = $serviceName
+    BinaryPathName = $binaryPath
+    Credential = $credential
+    Description = 'Jenkins CI server'
+}
+New-Service @serviceParams
+Start-Service $serviceName
+
+------------
+
+Windows run .net app:
+# Install Git using Chocolatey
+choco install git -y
+
+choco install dotnet
+dotnet new blazor -o BlazorApp
+change port number to 8081 or something in
+C:\Users\Administrator\Desktop\app-proj\web-app\BlazorApp\Properties\launchSettings.json
+ "applicationUrl": "http://localhost:5189",
+ "applicationUrl": "https://localhost:7293;http://localhost:5189",
+cd .\BlazorApp\
+dotnet watch
+
+
+
+
+choco install apache-httpd --params "/installLocation:C:\HTTPD /port:8081"
+change port mannualy to C:\HTTPD\Apache24\conf\httpd.conf
+

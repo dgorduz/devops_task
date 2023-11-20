@@ -7,8 +7,36 @@ packer {
   }
 }
 
-source "amazon-ebs" "windows-server" {
-  ami_name      = "windows-server-jenkins-proof"
+variable "sys_pass" {
+  default     = "SuperS3cr3t!!!!"
+  description = "The password used to connect to the instance via WinRM."
+  sensitive   = true
+  type        = string
+}
+
+variable "sys_username" {
+  type        = string
+  description = "The plaintext username for authenticating"
+  default     = "Aministrator"
+}
+
+variable "build_region" {
+  default     = "us-east-1"
+  description = "The region in which to retrieve the base AMI from and build the new AMI."
+  type        = string
+}
+
+variable "jenkins_port" {
+    default   = "8080"
+    description = "Jenkins port on which to run."
+    type = number
+}
+
+// locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
+
+source "amazon-ebs" "windows-AMI" {
+//   ami_name      = "windows-AMI-jenkins-${local.timestamp}"
+  ami_name      = "windows-AMI-jenkins-var-1"
   instance_type = "t2.medium"
   region        = "us-east-1"
   communicator  = "winrm"
@@ -25,7 +53,6 @@ source "amazon-ebs" "windows-server" {
 
   //   force_deregister = true
 
-  //   user_data_file = "./bootstrap_win.txt"
   winrm_insecure = true
   winrm_password = "SuperS3cr3t!!!!"
   winrm_use_ssl  = true
@@ -34,13 +61,20 @@ source "amazon-ebs" "windows-server" {
 }
 
 build {
-  name = "devops-task"
+  name = "build_windows_AMI"
   sources = [
-    "source.amazon-ebs.windows-server"
+    "source.amazon-ebs.windows-AMI"
   ]
 
   provisioner "powershell" {
+    // environment_vars = [
+    //     "NEW_PASS=${var.sys_pass}"
+    // ]
     inline = [
+
+      # Set administrator password
+    // "net user Administrator $NEW_PASS",
+    // "wmic useraccount where \"name='Administrator'\" set PasswordExpires=FALSE",
       # Install .NET Framework 3.5
       "Install-WindowsFeature -Name NET-Framework-Core",
 
@@ -61,7 +95,7 @@ build {
 
   provisioner "powershell" {
     environment_vars = [
-      "Port = 8080"
+      "Port = ${var.jenkins_port}"
     ]
     inline = [
       # Install Jenkins using Chocolatey
@@ -79,6 +113,10 @@ build {
   }
 
   provisioner "powershell" {
+    environment_vars = [
+        "jenkins_port=${var.jenkins_port}",
+        "password=${var.sys_pass}"
+    ]
     scripts = [
       "./src/whitelist_win_port.ps1"
     ]
