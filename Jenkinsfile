@@ -5,6 +5,9 @@ pipeline {
     }
 
     stages {
+        when{
+            branch 'dev'
+        
         stage('Terraform init & change directoryy') {
             steps {
                 script {
@@ -27,6 +30,6 @@ pipeline {
                 }
             }
         }
-        
+        }
     }
 }
