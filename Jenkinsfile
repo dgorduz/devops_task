@@ -1,13 +1,9 @@
+String cron_string = BRANCH_NAME == "dev" ? "*/1 * * * *" : ""
+
 pipeline {
     agent any
-    triggers {
-        pollSCM 'H/1 * * * *'
-    }
-
+    triggers { cron(cron_string) }
     stages {
-        when{
-            branch 'dev'
-        
         stage('Terraform init & change directoryy') {
             steps {
                 script {
@@ -29,7 +25,6 @@ pipeline {
                     }
                 }
             }
-        }
         }
     }
 }
