@@ -5,7 +5,7 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
-    
+
     agent any
     triggers { cron(cron_string) }
     stages {
@@ -31,7 +31,7 @@ pipeline {
                     // Change directory to the Terraform working directory
                     dir('terraform_instance') {
                         // Execute 'terraform plan'
-                        sh 'echo should be Terraform plan, but it crashed'
+                        sh 'terraform apply'
                     }
                 }
             }
