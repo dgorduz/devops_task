@@ -21,7 +21,7 @@ pipeline {
                     // Change directory to the Terraform working directory
                     dir('terraform_instance') {
                         // Execute 'terraform plan'
-                        sh 'echo should be Terraform plan, but it crashes'
+                        sh 'echo should be Terraform plan, but it crashed'
                     }
                 }
             }
