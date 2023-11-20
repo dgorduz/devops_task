@@ -5,7 +5,7 @@ pipeline {
     }
 
     stages {
-        stage('Terraform init & change directory') {
+        stage('Terraform init & change directoy') {
             steps {
                 sh 'ls'
                 sh 'cd terraform_instance'
