@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Terraform init') {
+        stage('Terraform init & change directory') {
             steps {
                 sh 'ls'
                 sh 'cd terraform/'
