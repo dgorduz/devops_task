@@ -9,7 +9,7 @@ pipeline {
             steps {
                 sh 'ls'
                 sh 'cd terraform_instance'
-                sh 'pwd'
+                sh 'ls'
                 sh 'terraform init'
             }
         }
