@@ -1,21 +1,30 @@
 pipeline {
     agent any
     triggers {
-        pollSCM '*/1 * * * *'
+        pollSCM 'H/1 * * * *'
     }
 
     stages {
         stage('Terraform init & change directoryy') {
             steps {
-                sh 'ls'
-                sh 'cd terraform_instance'
-                sh 'ls'
-                sh 'terraform init'
+                script {
+                    dir('terraform_instance') {
+                        // Execute 'terraform init'
+                        sh 'ls'
+                        sh 'terraform init'
+                    }
+                }
             }
         }
         stage('Terraform plan') {
             steps {
-                sh 'terraform plan'
+                script {
+                    // Change directory to the Terraform working directory
+                    dir('terraform_instance') {
+                        // Execute 'terraform plan'
+                        sh 'terraform plan'
+                    }
+                }
             }
         }
         
