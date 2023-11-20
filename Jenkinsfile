@@ -4,7 +4,7 @@ pipeline {
     agent any
     triggers { cron(cron_string) }
     stages {
-        stage('Terraform init & change directoryy') {
+        stage('Terraform init') {
             steps {
                 script {
                     dir('terraform_instance') {
