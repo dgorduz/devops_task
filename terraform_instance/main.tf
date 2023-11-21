@@ -2,45 +2,36 @@ provider "aws" {
   region = "us-east-1"
 }
 
-locals {
-  instance_type = "t2.micro"
-  most_recent   = true
-}
-
-data "aws_ami" "ubuntu" {
+data "aws_ami" "my_windows_ami" {
+  owners      = ["self"]
+  most_recent = true
   filter {
     name   = "name"
-    values = ["ubuntu-*"]
+    values = ["windows-AMI-*"]
   }
-  most_recent = local.most_recent
 }
 
-resource "aws_key_pair" "this" {
-  key_name   = "new_tf_key"
-  public_key = file("/var/lib/jenkins/.ssh/id_rsa.pub")
-}
+resource "aws_instance" "windows_server" {
+  ami           = data.aws_ami.my_windows_ami.id
+  instance_type = "t2.medium"
+  tags = {
+    Name = "provisioned_win"
+  }
 
-resource "aws_instance" "web" {
-  ami           = "ami-05c13eab67c5d8861"
-  instance_type = local.instance_type
-  key_name      = aws_key_pair.this.key_name
-}
-
-resource "null_resource" "remote_exec" {
-  depends_on = [
-    aws_instance.web
-  ]
   connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("/var/lib/jenkins/.ssh/id_rsa")
-    host        = aws_instance.web.public_ip
+    type        = "winrm"
+    user        = "Administrator"
+    password    = "Suuuper$ecret1"
+    timeout     = "8m"
+    host        = aws_instance.windows_server.public_ip
   }
+
   provisioner "remote-exec" {
     inline = [
-      "mkdir proj_docker",
-      "cd proj_docker | touch Dockerfile"
+      "git clone -b dev https://github.com/dgorduz/blazor_app_demo.git",
+      "cd .\\blazor_app_demo\\",
+      # "powershell.exe -ExecutionPolicy Bypass -File .\\build_env.ps1",
+      "Start-Process powershell.exe -ArgumentList '-ExecutionPolicy Bypass', '-File .\\build_env.ps1' -NoNewWindow"
     ]
   }
 }
-
