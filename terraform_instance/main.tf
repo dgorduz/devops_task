@@ -17,7 +17,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_key_pair" "this" {
   key_name   = "new_tf_key"
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = file("/var/lib/jenkins/.ssh/id_rsa.pub")
 }
 
 resource "aws_instance" "web" {
@@ -33,7 +33,7 @@ resource "null_resource" "remote_exec" {
   connection {
     type        = "ssh"
     user        = "ec2-user"
-    private_key = file("~/.ssh/id_rsa")
+    private_key = file("/var/lib/jenkins/.ssh/id_rsa")
     host        = aws_instance.web.public_ip
   }
   provisioner "remote-exec" {

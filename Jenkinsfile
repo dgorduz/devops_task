@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Git checkout'){
             steps{
-                git branch: 'dev', credentialsId: 'git-jenkins', url: 'https://github.com/dgorduz/devops_task'
+                git branch: 'dev', url: 'https://github.com/dgorduz/devops_task'
             }
         }
         stage('Terraform init') {
