@@ -10,28 +10,37 @@ data "aws_ami" "my_windows_ami" {
     values = ["windows-AMI-*"]
   }
 }
+variable "nr_vms" {
+  default = 1
+}
+variable "win_pass" {
+  default = ""
+  description = "password to login from the Jenkins credentials"
+  sensitive = true  
+}
 
 resource "aws_instance" "windows_server" {
+  count = var.nr_vms
   ami           = data.aws_ami.my_windows_ami.id
   instance_type = "t2.medium"
   tags = {
-    Name = "provisioned_win"
+    Name = "provisioned_win_${count.index}"
   }
 
   connection {
     type        = "winrm"
     user        = "Administrator"
-    password    = "Suuuper$ecret1"
-    timeout     = "8m"
-    host        = aws_instance.windows_server.public_ip
+    password    = var.win_pass
+    timeout     = "5m"
+    host        = self.public_ip
   }
 
   provisioner "remote-exec" {
     inline = [
       "git clone -b dev https://github.com/dgorduz/blazor_app_demo.git",
-      "cd .\\blazor_app_demo\\",
-      # "powershell.exe -ExecutionPolicy Bypass -File .\\build_env.ps1",
-      "Start-Process powershell.exe -ArgumentList '-ExecutionPolicy Bypass', '-File .\\build_env.ps1' -NoNewWindow"
+      "cd .\\blazor_app_demo\\"
     ]
   }
 }
+
+# todo: enable option to create multiple VMs. Most likely do a cycle
