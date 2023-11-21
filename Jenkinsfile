@@ -18,8 +18,6 @@ pipeline {
             steps {
                 script {
                     dir('terraform_instance') {
-                        // Execute 'terraform init'
-                        sh 'ls'
                         sh 'terraform init'
                     }
                 }
@@ -28,10 +26,17 @@ pipeline {
         stage('Terraform plan') {
             steps {
                 script {
-                    // Change directory to the Terraform working directory
                     dir('terraform_instance') {
-                        // Execute 'terraform plan'
-                        sh 'terraform apply'
+                        sh 'terraform plan'
+                    }
+                }
+            }
+        }
+        stage('Terraform apply') {
+            steps {
+                script {
+                    dir('terraform_instance') {
+                        sh 'terraform apply --auto-approve'
                     }
                 }
             }
