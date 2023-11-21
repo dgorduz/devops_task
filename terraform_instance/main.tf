@@ -9,7 +9,7 @@ locals {
 
 data "aws_ami" "ubuntu" {
   filter {
-    name   = "ubuntu_from_jenkins"
+    name   = "name"
     values = ["ubuntu-*"]
   }
   most_recent = local.most_recent
