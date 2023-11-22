@@ -40,9 +40,11 @@ pipeline {
         stage('Terraform apply') {
             steps {
                 script {
-                    dir('terraform_instance') {
-                        sh "echo ${env.WIN_PASS}"
-                        sh "terraform apply -var=\"nr_vms=${params.nr_vms}\" -var=\"win_pass=${env.WIN_PASS}\" --auto-approve"
+                    withCredentials([string(credentialsId: 'WIN_PASS', variable: 'WIN_PASS')]) {
+                        dir('terraform_instance') {
+                            sh "echo ${env.WIN_PASS}"
+                            sh "terraform apply -var=\"nr_vms=${params.nr_vms}\" -var='win_pass=$WIN_PASS' --auto-approve"
+                        }
                     }
                 }
             }
