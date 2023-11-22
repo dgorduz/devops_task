@@ -22,6 +22,9 @@ pipeline {
             }
         }
         stage('Terraform init') {
+            when{
+                expression {env.BRANCH_NAME == "dev"}
+            }
             steps {
                 script {
                     dir('terraform_instance') {
@@ -31,6 +34,9 @@ pipeline {
             }
         }
         stage('Terraform plan') {
+            when{
+                expression {env.BRANCH_NAME == "dev"}
+            }
             steps {
                 script {
                     dir('terraform_instance') {
@@ -40,6 +46,9 @@ pipeline {
             }
         }
         stage('Terraform apply') {
+            when{
+                expression {env.BRANCH_NAME == "dev"}
+            }
             steps {
                 script {
                     withCredentials([string(credentialsId: 'WIN_PASS', variable: 'WIN_PASS')]) {
