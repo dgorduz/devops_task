@@ -13,12 +13,14 @@ pipeline {
         pollSCM('*/1 * * * *') 
     }
     stages {
-        stage('Git checkout'){
+        stage('checkout'){
             steps{
-                sh "echo ${env.BRANCH_NAME}"
-                git branch: 'dev', 
-                url: 'https://github.com/dgorduz/devops_task.git'
-                sh "echo $env.BRANCH_NAME"
+                script{
+                    sh "echo ${env.BRANCH_NAME}"
+                    git branch: 'dev', 
+                    url: 'https://github.com/dgorduz/devops_task.git',
+                    sh "echo ${env.BRANCH_NAME}"
+                }
             }
         }
         stage('Terraform init') {
