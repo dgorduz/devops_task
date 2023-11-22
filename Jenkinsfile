@@ -2,7 +2,7 @@ String cron_string = env.BRANCH_NAME == "dev" ? "*/1 * * * *" : ""
 
 pipeline {
     parameters {
-        string(name: 'nr_vms_own', defaultValue: '1', description: 'Number of VMs (integer)')
+        string(name: 'nr_vms', defaultValue: '1', description: 'Number of VMs (integer)')
     }
 
     environment {
@@ -41,8 +41,7 @@ pipeline {
             steps {
                 script {
                     dir('terraform_instance') {
-                        sh 'echo ${env.WIN_PASS}'
-                        sh 'terraform apply -var="nr_vms=${params.nr_vms_own}" -var="win_pass=Suuuper$ecret1" --auto-approve'
+                        sh 'terraform apply -var="nr_vms=1" -var="win_pass=Suuuper$ecret1" --auto-approve'
                     }
                 }
             }
