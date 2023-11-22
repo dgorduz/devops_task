@@ -16,7 +16,7 @@ pipeline {
         stage('checkout'){
             steps{
                 git branch: 'dev', 
-                url: 'https://github.com/dgorduz/devops_task.git',
+                url: 'https://github.com/dgorduz/devops_task.git'
             }
         }
         stage('Terraform init') {
