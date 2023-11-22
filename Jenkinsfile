@@ -16,7 +16,8 @@ pipeline {
         stage('Git checkout'){
             steps{
                 sh "echo ${env.BRANCH_NAME}"
-                git branch: 'dev', url: 'https://github.com/dgorduz/devops_task'
+                git branch: 'dev', 
+                url: 'https://github.com/dgorduz/devops_task.git'
                 sh "echo $env.BRANCH_NAME"
             }
         }
