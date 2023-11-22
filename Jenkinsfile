@@ -16,17 +16,12 @@ pipeline {
         stage('checkout'){
             steps{
                 script{
-                    sh "echo ${env.BRANCH_NAME}"
                     git branch: 'dev', 
                     url: 'https://github.com/dgorduz/devops_task.git',
-                    sh "echo ${env.BRANCH_NAME}"
                 }
             }
         }
         stage('Terraform init') {
-            when{
-                expression { return env.BRANCH_NAME == 'dev'}
-            }
             steps {
                 script {
                     dir('terraform_instance') {
@@ -36,9 +31,6 @@ pipeline {
             }
         }
         stage('Terraform plan') {
-            when{
-                expression {env.BRANCH_NAME == "dev"}
-            }
             steps {
                 script {
                     dir('terraform_instance') {
@@ -48,9 +40,6 @@ pipeline {
             }
         }
         stage('Terraform apply') {
-            when{
-                expression {env.BRANCH_NAME == "dev"}
-            }
             steps {
                 script {
                     withCredentials([string(credentialsId: 'WIN_PASS', variable: 'WIN_PASS')]) {
