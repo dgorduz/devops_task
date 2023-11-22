@@ -1,6 +1,6 @@
 pipeline {
     parameters {
-        choice(name: 'nr_vms', choices: ['1', '2', '3', '4'], description: 'Number of VMs')
+        choice(name: 'nr_vms', choices: ['1', '2', '3'], description: 'Number of VMs')
     }
 
     environment {
