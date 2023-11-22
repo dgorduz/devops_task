@@ -69,3 +69,6 @@ User Permissions:
     C:\Users\Administrator\blazor_app_demo\build_env.ps1
     ```
   - The app will be accessible on port `8080` inside and outside the network, that was whitelisted in the Windows Server.
+
+## Achievement:
+When new changes a done to the BlazorApp (dotnet app) the pipeline is triggered automatically and as a result a new environment is provisioned and ready to be used in about `3 min`.
