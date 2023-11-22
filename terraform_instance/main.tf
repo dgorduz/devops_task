@@ -10,14 +10,6 @@ data "aws_ami" "my_windows_ami" {
     values = ["windows-AMI-*"]
   }
 }
-variable "nr_vms" {
-  default = 1
-}
-variable "win_pass" {
-  default = ""
-  description = "password to login from the Jenkins credentials"
-  sensitive = true  
-}
 
 resource "aws_instance" "windows_server" {
   count = var.nr_vms
