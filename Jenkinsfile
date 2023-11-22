@@ -25,7 +25,7 @@ pipeline {
         }
         stage('Terraform init') {
             when{
-                expression {env.BRANCH_NAME == "dev"}
+                expression { return env.BRANCH_NAME == 'dev'}
             }
             steps {
                 script {
