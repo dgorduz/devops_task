@@ -42,5 +42,3 @@ resource "aws_instance" "windows_server" {
     ]
   }
 }
-
-# todo: enable option to create multiple VMs. Most likely do a cycle

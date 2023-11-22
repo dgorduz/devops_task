@@ -42,7 +42,7 @@ pipeline {
                 script {
                     dir('terraform_instance') {
                         sh 'echo ${env.WIN_PASS}'
-                        sh 'terraform apply -var="nr_vms=${params.nr_vms_own}" -var=\'win_pass=${env.WIN_PASS}\' --auto-approve'
+                        sh 'terraform apply -var="nr_vms=${params.nr_vms_own}" -var="win_pass=Suuuper$ecret1" --auto-approve'
                     }
                 }
             }
