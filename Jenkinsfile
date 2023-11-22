@@ -2,7 +2,7 @@ String cron_string = env.BRANCH_NAME == "dev" ? "*/1 * * * *" : ""
 
 pipeline {
     parameters {
-        integer(name: 'nr_vms', defaultValue: '1', description: 'Number of VMs (integer)')
+        choice(name: 'nr_vms', choices: ['2', '3', '4'], description: 'Number of VMs', defaultValue: '1')
     }
 
     environment {
