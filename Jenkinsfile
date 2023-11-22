@@ -14,11 +14,10 @@ pipeline {
     }
     stages {
         stage('Git checkout'){
-            when{
-                expression {env.BRANCH_NAME == "dev"}
-            }
             steps{
+                sh 'echo ${env.BRANCH_NAME}'
                 git branch: 'dev', url: 'https://github.com/dgorduz/devops_task'
+                sh 'echo ${env.BRANCH_NAME}'
             }
         }
         stage('Terraform init') {
