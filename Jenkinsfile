@@ -1,20 +1,22 @@
-String cron_string = env.BRANCH_NAME == "dev" ? "*/1 * * * *" : ""
-
 pipeline {
     parameters {
-        choice(name: 'nr_vms', choices: ['2', '3', '4'], description: 'Number of VMs')
+        choice(name: 'nr_vms', choices: ['1', '2', '3', '4'], description: 'Number of VMs')
     }
 
     environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        WIN_PASS              = credentials('WIN_PASS')
     }
 
     agent any
-    triggers { cron(cron_string) }
+    triggers { 
+        pollSCM('*/1 * * * *') 
+    }
     stages {
         stage('Git checkout'){
+            when{
+                expression {env.BRANCH_NAME == "dev"}
+            }
             steps{
                 git branch: 'dev', url: 'https://github.com/dgorduz/devops_task'
             }
@@ -42,7 +44,6 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'WIN_PASS', variable: 'WIN_PASS')]) {
                         dir('terraform_instance') {
-                            sh "echo ${env.WIN_PASS}"
                             sh "terraform apply -var=\"nr_vms=${params.nr_vms}\" -var='win_pass=$WIN_PASS' --auto-approve"
                         }
                     }
