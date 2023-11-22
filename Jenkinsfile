@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     dir('terraform_instance') {
-                        sh 'terraform apply -var="nr_vms=1" -var="win_pass=Suuuper$ecret1" --auto-approve'
+                        sh 'terraform apply -var="nr_vms=1" -var=\'win_pass=${env.WIN_PASS}\' --auto-approve'
                     }
                 }
             }
