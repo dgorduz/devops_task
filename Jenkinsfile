@@ -13,10 +13,10 @@ pipeline {
         pollSCM('*/1 * * * *') 
     }
     stages {
-        when{
+        stage('Git checkout'){
+            when{
                 expression {env.BRANCH_NAME == "dev"}
             }
-        stage('Git checkout'){
             steps{
                 git branch: 'dev', url: 'https://github.com/dgorduz/devops_task'
             }
